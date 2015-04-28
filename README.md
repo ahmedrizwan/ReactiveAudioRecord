@@ -6,8 +6,8 @@ A reactive (RxAndroid) implementation of the AudioRecord for recording raw (pcm)
 ```java
 //using the retrolambda syntax
 Observable.create(recorderOnSubscribe)
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
                 .subscribe(shortBuffer -> {
                           //process the shortBuffers here
                         },
