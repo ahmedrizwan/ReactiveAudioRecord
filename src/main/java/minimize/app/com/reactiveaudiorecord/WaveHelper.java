@@ -8,10 +8,9 @@ import java.io.RandomAccessFile;
 
 /**
  * Created by ahmedrizwan on 1/13/15.
- * A helper methods for converting the recorded raw-data file into a wav-file.
+ * Helper methods for converting the recorded raw-data file into a wav-file.
  */
 public class WaveHelper {
-
     //channels -> Mono or Stereo
     //bitsPerSecond -> 16 or 8 (currently android supports 16 only)
     public void rawToWave(File rawFile, int sampleRate, int channels, int bitsPerSecond) throws IOException {
@@ -34,9 +33,7 @@ public class WaveHelper {
             writeString(randomAccessFile, "data"); // subchunk 2 id
             writeInt(randomAccessFile, (int) rawFile.length()); // subchunk 2 size
         } finally {
-            if (randomAccessFile != null) {
-                randomAccessFile.close();
-            }
+            randomAccessFile.close();
         }
     }
 
@@ -60,5 +57,4 @@ public class WaveHelper {
             output.write(value.charAt(i));
         }
     }
-
 }
