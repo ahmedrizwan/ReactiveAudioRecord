@@ -1,34 +1,78 @@
 # ReactiveAudioRecord
 A reactive (RxAndroid) implementation of the AudioRecord for recording raw (pcm) audio-data.
 
-#How to use it?
-* Create an Observable from the RecorderOnSubscribe
+###How to use it?
+#####Create an instance of RecorderOnSubscribe giving it the path to the file
 ```java
-//using the retrolambda syntax
-Observable.create(recorderOnSubscribe)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(shortBuffer -> {
-                          //process the shortBuffers here
-                        },
-                        //on error 
-                        e -> Log.e("Error", e.getMessage()),
-                        () -> {
-                          //on completion
-                        });
+final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav"; //dummy file 
+RecorderOnSubscribe recorderOnSubscribe = new RecorderOnSubscribe.Builder(filePath)
+                                                                 .sampleRate(22000)       //by default it's 44100
+                                                                 .stereo()                //by default it's mono
+                                                                 .audioSourceCamcorder()  //by default it's MIC
+                                                                 .createSubscription();
 ```
-* After setting up the Observer, start the recording-process for observing Mic-data
+#####Use the recorderOnSubscribe to create an observable
 ```java
-recorderOnSubscribe.start(sampleRate, //for example 44100
-                          bufferSize, //usually calculated from AudioRecord.getMinBufferSize
-                          channel,    //Mono or Stereo
-                          audioSource //MIC
-                         );
+Observable.create(mRecorderOnSubscribe)
+          .subscribe( shorts -> {
+                try
+                {
+                    recorderOnSubscribe.writeShortsToFile(shorts); //helper method for writing shorts to file 
+                } catch (IOException e)
+                {
+                    Log.e("Recorder", e.getMessage());
+                }
+            }
+        });
 ```
-* You can pause/resume/stop the recording-process by calling these methods
+
+####After setting up the Observer, manipulate the recording-process by using these methods
 ```java
-recorderOnSubscribe.pause();
-recorderOnSubscribe.resume();
+
+recorderOnSubscribe.start();
+
 recorderOnSubscribe.stop();
+
+recorderOnSubscribe.pause();
+
+recorderOnSubscribe.isRecording(); //returns a boolean 
+
+recorderOnSubscribe.isRecordingStopped(); //to check whether the recorder is in Stopped state
+
 ```
-And that's it!
+
+And that's it! Check out the sample code for working example!
+
+##Download 
+Repository available on jCenter
+
+```Gradle
+compile 'com.minimize.library:reactiveaudiorecord:1.0.1'
+```
+*If the dependency fails to resolve, add this to your project repositories*
+```Gradle
+repositories {
+  maven {
+      url  "http://dl.bintray.com/ahmedrizwan/maven" 
+  }
+}
+```
+
+##License 
+```
+Copyright 2015 Ahmed Rizwan
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+
