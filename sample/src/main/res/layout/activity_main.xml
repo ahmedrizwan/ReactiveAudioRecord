@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <Button
+            android:text="Record"
+            android:layout_width="88dp"
+            android:layout_height="48dp"
+            android:id="@+id/buttonRecord"
+            android:contentDescription="Record Audio"
+            app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+            app:layout_constraintTop_toTopOf="@+id/activity_main"
+            app:layout_constraintRight_toRightOf="@+id/activity_main"
+            app:layout_constraintBottom_toBottomOf="@+id/activity_main"/>
+    <Chronometer
+            android:text="00:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chronometer"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+            app:layout_constraintTop_toTopOf="@+id/activity_main" android:layout_marginTop="104dp"
+            app:layout_constraintRight_toRightOf="@+id/activity_main"/>
+    <TextView
+            android:text="Path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewPath"
+            android:textAlignment="center"
+            app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+            app:layout_constraintTop_toBottomOf="@+id/chronometer" android:layout_marginTop="8dp"
+            app:layout_constraintRight_toRightOf="@+id/activity_main"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
+            android:layout_marginBottom="8dp"/>
+    <Button
+            android:text="Play"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:id="@+id/buttonPlay"
+            app:layout_constraintLeft_toLeftOf="@+id/buttonRecord"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRecord" android:layout_marginTop="8dp"
+            app:layout_constraintRight_toRightOf="@+id/buttonRecord"
+            app:layout_constraintHorizontal_bias="0.0"/>
+</android.support.constraint.ConstraintLayout>
