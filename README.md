@@ -41,7 +41,7 @@ recorderOnSubscribe.isRecordingStopped(); //to check whether the recorder is in 
 
 ```
 
-And that's it! Check out the sample code for working example!
+And that's it! Check out the sample code for a working example!
 
 ##Download 
 Repository available on jCenter
