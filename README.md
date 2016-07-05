@@ -40,6 +40,12 @@ recorderOnSubscribe.isRecording(); //returns a boolean
 recorderOnSubscribe.isRecordingStopped(); //to check whether the recorder is in Stopped state
 
 ```
+####Helper methods for wave file write operations
+```java
+recorderOnSubscribe.writeShortsToFile(shorts); //write the short buffers to file
+
+recorderOnSubscribe.completeRecording(); //writes the wave header to file... Call it after the stop() method
+```
 
 And that's it! Check out the sample code for a working example!
 
