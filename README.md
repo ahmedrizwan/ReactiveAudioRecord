@@ -15,8 +15,8 @@ RecorderOnSubscribe recorderOnSubscribe = new RecorderOnSubscribe.Builder(filePa
 ```java
 Observable.create(mRecorderOnSubscribe)
           .subscribe( shorts -> {
-                    recorderOnSubscribe.writeShortsToFile(shorts); //helper method for writing shorts to file 
-            }
+              recorderOnSubscribe.writeShortsToFile(shorts); //helper method for writing shorts to file 
+          }
         );
 ```
 
