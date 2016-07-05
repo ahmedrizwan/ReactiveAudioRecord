@@ -1,4 +1,8 @@
 # ReactiveAudioRecord
+
+[![Release](https://img.shields.io/badge/jCenter-1.0.1-brightgreen.svg)](https://bintray.com/sbrukhanda/maven/FragmentViewPager)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20Version%202.0-blue.svg)](https://github.com/sbrukhanda/fragmentviewpager/blob/master/LICENSE.txt)
+
 A reactive (RxAndroid) implementation of the AudioRecord for recording raw (pcm) audio-data. Also includes helper methods for the creation of Wave audio files. 
 
 ###How to use it?
