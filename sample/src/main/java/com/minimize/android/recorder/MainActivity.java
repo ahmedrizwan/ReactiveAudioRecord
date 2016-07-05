@@ -1,7 +1,7 @@
 package com.minimize.android.recorder;
 
 import com.example.arkhitech.reactiveaudiorecord.R;
-import com.minimize.recorder.RecorderOnSubscribe;
+import com.minimize.library.RecorderOnSubscribe;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity
                     try
                     {
                         mRecorderOnSubscribe.stop();
+                        //helper method for closing the dataStream, also writes the
+                        //wave header
+                        mRecorderOnSubscribe.completeRecording();
                     } catch (IOException e)
                     {
                         Log.e("Recorder", e.getMessage());

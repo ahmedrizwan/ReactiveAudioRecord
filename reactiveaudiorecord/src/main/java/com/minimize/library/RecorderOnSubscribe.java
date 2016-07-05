@@ -1,4 +1,4 @@
-package com.minimize.recorder;
+package com.minimize.library;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -160,8 +160,6 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
             {
                 audioRecorder.release();
             }
-            //            mSubscriber.onCompleted();
-            completeRecording();
         }
     }
 
