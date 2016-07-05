@@ -1,5 +1,5 @@
 # ReactiveAudioRecord
-A reactive (RxAndroid) implementation of the AudioRecord for recording raw (pcm) audio-data.
+A reactive (RxAndroid) implementation of the AudioRecord for recording raw (pcm) audio-data. Also includes helper methods for the creation of Wave audio files. 
 
 ###How to use it?
 #####Create an instance of RecorderOnSubscribe giving it the path to the file
