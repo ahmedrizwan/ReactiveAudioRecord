@@ -20,8 +20,7 @@ RecorderOnSubscribe recorderOnSubscribe = new RecorderOnSubscribe.Builder(filePa
 Observable.create(recorderOnSubscribe)
           .subscribe( shorts -> {
               recorderOnSubscribe.writeShortsToFile(shorts); //helper method for writing shorts to file 
-          }
-        );
+          });
 ```
 
 ####After setting up the Observer, manipulate the recording-process by using these methods
