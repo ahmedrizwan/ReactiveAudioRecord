@@ -1,6 +1,6 @@
 # ReactiveAudioRecord
 
-[![Release](https://img.shields.io/badge/jCenter-1.0.1-brightgreen.svg)](https://bintray.com/sbrukhanda/maven/FragmentViewPager)
+[![Release](https://img.shields.io/badge/jCenter-1.0.2-brightgreen.svg)](https://bintray.com/sbrukhanda/maven/FragmentViewPager)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20Version%202.0-blue.svg)](https://github.com/sbrukhanda/fragmentviewpager/blob/master/LICENSE.txt)
 
 A reactive (Rx) implementation of the AudioRecord API for recording raw (pcm) audio-data. Also includes helper methods for the creation of Wave audio files. 
@@ -10,10 +10,10 @@ A reactive (Rx) implementation of the AudioRecord API for recording raw (pcm) au
 ```java
 final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav"; //dummy file 
 RecorderOnSubscribe recorder = new RecorderOnSubscribe.Builder(filePath)
-                                                      .sampleRate(22000)       //by default it's 44100
-                                                      .stereo()                //by default it's mono
-                                                      .audioSourceCamcorder()  //by default it's MIC
-                                                      .createSubscription();
+                                                      .sampleRate(22000)       //by default 44100
+                                                      .stereo()                //by default mono
+                                                      .audioSourceCamcorder()  //by default MIC
+                                                      .build();
 ```
 #####Use the recorder OnSubscribe to create an observable
 ```java
@@ -53,7 +53,7 @@ And that's it! Check out the sample code for a working example!
 Repository available on jCenter
 
 ```Gradle
-compile 'com.minimize.library:reactiveaudiorecord:1.0.1'
+compile 'com.minimize.library:reactiveaudiorecord:1.0.2'
 ```
 
 ##License 
