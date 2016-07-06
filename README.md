@@ -19,7 +19,8 @@ RecorderOnSubscribe recorder = new RecorderOnSubscribe.Builder(filePath)
 ```java
 Observable.create(recorder)
           .subscribe( shorts -> {
-              recorder.writeShortsToFile(shorts); //helper method for writing shorts to file 
+              ...
+              recorder.writeShortsToFile(shorts); //a helper method that writes the buffers to (wave) file
           });
 ```
 
@@ -34,14 +35,14 @@ recorder.pause();
 
 recorder.resume();
 
-recorder.isRecording(); //returns a boolean 
+recorder.isRecording(); 
 
-recorder.isRecordingStopped(); //to check whether the recorder is in Stopped state
+recorder.isRecordingStopped(); //a method to check whether the recorder is in Stopped state
 
 ```
 ####Helper methods for wave file write operations
 ```java
-recorder.writeShortsToFile(shorts); //write the short buffers to file
+recorder.writeShortsToFile(shorts); //write the short buffers to a wave file
 
 recorder.completeRecording(); //writes the wave header to file... Call it after the stop() method
 ```
