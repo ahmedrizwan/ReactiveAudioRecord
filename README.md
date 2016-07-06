@@ -9,39 +9,41 @@ A reactive (Rx) implementation of the AudioRecord API for recording raw (pcm) au
 #####Create an instance of RecorderOnSubscribe giving it the path to the file
 ```java
 final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav"; //dummy file 
-RecorderOnSubscribe recorderOnSubscribe = new RecorderOnSubscribe.Builder(filePath)
-                                                                 .sampleRate(22000)       //by default it's 44100
-                                                                 .stereo()                //by default it's mono
-                                                                 .audioSourceCamcorder()  //by default it's MIC
-                                                                 .createSubscription();
+RecorderOnSubscribe recorder = new RecorderOnSubscribe.Builder(filePath)
+                                                      .sampleRate(22000)       //by default it's 44100
+                                                      .stereo()                //by default it's mono
+                                                      .audioSourceCamcorder()  //by default it's MIC
+                                                      .createSubscription();
 ```
-#####Use the recorderOnSubscribe to create an observable
+#####Use the recorder OnSubscribe to create an observable
 ```java
-Observable.create(recorderOnSubscribe)
+Observable.create(recorder)
           .subscribe( shorts -> {
-              recorderOnSubscribe.writeShortsToFile(shorts); //helper method for writing shorts to file 
+              recorder.writeShortsToFile(shorts); //helper method for writing shorts to file 
           });
 ```
 
 ####After setting up the Observer, manipulate the recording-process by using these methods
 ```java
 
-recorderOnSubscribe.start();
+recorder.start();
 
-recorderOnSubscribe.stop();
+recorder.stop();
 
-recorderOnSubscribe.pause();
+recorder.pause();
 
-recorderOnSubscribe.isRecording(); //returns a boolean 
+recorder.resume();
 
-recorderOnSubscribe.isRecordingStopped(); //to check whether the recorder is in Stopped state
+recorder.isRecording(); //returns a boolean 
+
+recorder.isRecordingStopped(); //to check whether the recorder is in Stopped state
 
 ```
 ####Helper methods for wave file write operations
 ```java
-recorderOnSubscribe.writeShortsToFile(shorts); //write the short buffers to file
+recorder.writeShortsToFile(shorts); //write the short buffers to file
 
-recorderOnSubscribe.completeRecording(); //writes the wave header to file... Call it after the stop() method
+recorder.completeRecording(); //writes the wave header to file... Call it after the stop() method
 ```
 
 And that's it! Check out the sample code for a working example!
