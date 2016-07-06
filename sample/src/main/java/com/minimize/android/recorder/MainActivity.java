@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity
         textViewPath.setText(filePath);
 
         mRecorderOnSubscribe = new RecorderOnSubscribe.Builder(filePath)
-                .createSubscription();
+                .audioSourceCamcorder()
+                .build();
 
         final View playButton = findViewById(R.id.buttonPlay);
         findViewById(R.id.buttonRecord).setOnClickListener(new View.OnClickListener()

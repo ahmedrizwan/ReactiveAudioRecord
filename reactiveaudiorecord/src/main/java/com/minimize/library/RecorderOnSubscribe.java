@@ -3,7 +3,6 @@ package com.minimize.library;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -32,7 +31,6 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
     private final int mAudioSource;
     private AudioRecord audioRecorder = null;
     private int bufferSize;
-    private String LOG_TAG = "Subcriber";
     private boolean isRecording = false;
     private final Object mPauseLock;
     private boolean mPaused;
@@ -87,7 +85,7 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
             return this;
         }
 
-        public RecorderOnSubscribe createSubscription()
+        public RecorderOnSubscribe build()
         {
             return new RecorderOnSubscribe(this.mFilePath, this.mSampleRate, this.mChannels,
                                            this.mBitsPerSecond, this.mAudioSource);
@@ -110,7 +108,6 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
     @Override
     public void call(Subscriber<? super short[]> subscriber)
     {
-        Log.e(LOG_TAG, "Subscribed");
         mSubscriber = subscriber;
     }
 
@@ -124,7 +121,6 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
 
         if (bufferSize != AudioRecord.ERROR_BAD_VALUE && bufferSize != AudioRecord.ERROR)
         {
-
             audioRecorder = new AudioRecord(mAudioSource, mSampleRate, mChannels,
                                             AudioFormat.ENCODING_PCM_16BIT, bufferSize * 10);
 
@@ -236,11 +232,11 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
         return audioRecorder == null || audioRecorder.getRecordingState() == 1;
     }
 
-    public void convertFileToWave(File file) throws IOException
+    private void convertFileToWave(File file) throws IOException
     {
         try
         {
-            rawToWave(file, mSampleRate, mChannels == AudioFormat.CHANNEL_IN_MONO ? 1 : 2, 16);
+            rawToWave(file, mSampleRate, 16);
         } catch (IOException e)
         {
             throw new IOException("Unable to convert file");
@@ -249,11 +245,10 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
 
     //channels -> Mono or Stereo
     //bitsPerSecond -> 16 or 8 (currently android supports 16 only)
-    public void rawToWave(File rawFile, int sampleRate, int channels,
-                          int bitsPerSecond) throws IOException
+    private void rawToWave(File rawFile, int sampleRate, int bitsPerSecond) throws IOException
     {
         RandomAccessFile randomAccessFile = new RandomAccessFile(rawFile, "rw");
-        channels = mChannels == AudioFormat.CHANNEL_IN_MONO ? 1 : 2;
+        int channels = mChannels == AudioFormat.CHANNEL_IN_MONO ? 1 : 2;
         //seek to beginning
         randomAccessFile.seek(0);
         try
@@ -305,20 +300,13 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
         {
             mDataOutputStream.writeByte(shorts[i] & 0xFF);
             mDataOutputStream.writeByte((shorts[i] >> 8) & 0xFF);
-
         }
     }
 
     public void completeRecording() throws IOException
     {
-        try
-        {
-            mDataOutputStream.flush();
-            mDataOutputStream.close();
-        } catch (Exception e)
-        {
-            Log.e("audioCaptured", e.getMessage());
-        }
+        mDataOutputStream.flush();
+        mDataOutputStream.close();
 
         File file = new File(mFilePath);
         convertFileToWave(file);
