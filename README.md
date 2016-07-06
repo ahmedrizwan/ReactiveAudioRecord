@@ -55,14 +55,6 @@ Repository available on jCenter
 ```Gradle
 compile 'com.minimize.library:reactiveaudiorecord:1.0.1'
 ```
-*If the dependency fails to resolve, add this to your project repositories*
-```Gradle
-repositories {
-  maven {
-      url  "http://dl.bintray.com/ahmedrizwan/maven" 
-  }
-}
-```
 
 ##License 
 ```
