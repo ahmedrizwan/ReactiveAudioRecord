@@ -38,7 +38,7 @@ Observable.create(recorder)
 | Name | Description |
 |:----:|:-----------:|
 | writeShortsToFile(shorts) | Writes the short buffers to wave file |
-| completeRecording() | Writes the Wave header info to the file (Call it after stop() method) |
+| completeRecording() | Writes the Wave header info to the file (Call it after *stop()* method) |
 
 And that's it! Check out the sample code for a working example!
 
