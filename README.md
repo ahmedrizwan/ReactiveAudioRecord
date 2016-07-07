@@ -25,27 +25,20 @@ Observable.create(recorder)
 ```
 
 ####After setting up the Observer, manipulate the recording-process by using these methods
-```java
+| Name | Description |
+|:----:|:-----------:|
+| start() | Starts the recorder and moves it to *Recording* state |
+| stop() | Stops the recorder and moves it to *Stopped* state |
+| pause() | Pauses the recorder and moves it to *Paused* state |
+| resume() | Resumes the recorder if it's in *Paused* state |
+| isRecording() | Returns true if the recorder is in *Recording* state |
+| isRecordingStopped() | Checks whether the recorder is in *Stopped* state or not |
 
-recorder.start();
-
-recorder.stop();
-
-recorder.pause();
-
-recorder.resume();
-
-recorder.isRecording(); 
-
-recorder.isRecordingStopped(); //a method to check whether the recorder is in Stopped state
-
-```
 ####Helper methods for wave file write operations
-```java
-recorder.writeShortsToFile(shorts); //write the short buffers to a wave file
-
-recorder.completeRecording(); //writes the wave header to file... Call it after the stop() method
-```
+| Name | Description |
+|:----:|:-----------:|
+| writeShortsToFile(shorts) | Writes the short buffers to wave file |
+| completeRecording() | Writes the Wave header info to the file (Call it after stop() method) |
 
 And that's it! Check out the sample code for a working example!
 
