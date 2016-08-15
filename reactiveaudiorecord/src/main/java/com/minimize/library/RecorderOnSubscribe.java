@@ -52,7 +52,7 @@ public class RecorderOnSubscribe implements Observable.OnSubscribe<short[]>, Run
             mSampleRate = 44100;
             mBitsPerSecond = AudioFormat.ENCODING_PCM_16BIT;
             mAudioSource = MediaRecorder.AudioSource.MIC;
-            mChannels = AudioFormat.CHANNEL_IN_MONO;
+            mChannels = 1;
         }
 
         public Builder sampleRate(int sampleRate)
