@@ -13,7 +13,7 @@ ext {
     artifact = 'reactiveaudiorecord'
 
     libraryDescription = 'A reactive wrapper library for Android AudioRecord.'
-    libraryVersion = '1.0.2'
+    libraryVersion = '2.0.0'
 
     developerId = 'ahmedrizwan'
     developerName = 'Ahmed Rizwan'
