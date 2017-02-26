@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="exposed-instrumentation-api-publish-0.5">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/reactiveaudiorecord/build/intermediates/exploded-aar/com.android.support.test/exposed-instrumentation-api-publish/0.5/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/reactiveaudiorecord/build/intermediates/exploded-aar/com.android.support.test/exposed-instrumentation-api-publish/0.5/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/2f6f1bbde440ba4a54c44f7ff0020a656f404ee1/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/2f6f1bbde440ba4a54c44f7ff0020a656f404ee1/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

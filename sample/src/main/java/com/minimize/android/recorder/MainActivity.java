@@ -1,153 +1,144 @@
 package com.minimize.android.recorder;
 
-import com.example.arkhitech.reactiveaudiorecord.R;
-import com.minimize.library.RecorderOnSubscribe;
-
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-
+import com.example.arkhitech.reactiveaudiorecord.R;
+import com.minimize.library.ObservableAudioRecorder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import library.minimize.com.chronometerpersist.ChronometerPersist;
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
-public class MainActivity extends AppCompatActivity
-{
-    private Subscription mSubscription;
-    private RecorderOnSubscribe mRecorderOnSubscribe;
+@RuntimePermissions
+public class MainActivity extends AppCompatActivity {
+  private Disposable subscription;
+  private ObservableAudioRecorder observableAudioRecorder;
 
+  private Button record;
+  private Button play;
+  private Chronometer chronometer;
+  private TextView filePathDisplay;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  private ChronometerPersist chronometerPersist;
 
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        TextView textViewPath = (TextView) findViewById(R.id.textViewPath);
+    filePathDisplay = (TextView) findViewById(R.id.textViewPath);
+    chronometer = (Chronometer) findViewById(R.id.chronometer);
 
-        Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
+    chronometerPersist =
+        ChronometerPersist.getInstance(chronometer, getSharedPreferences("MyPrefs", MODE_PRIVATE));
+    final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav";
 
-        final ChronometerPersist chronometerPersist = ChronometerPersist.getInstance(chronometer,
-                                                                                     getSharedPreferences(
-                                                                                             "MyPrefs",
-                                                                                             MODE_PRIVATE));
-        final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav";
+    filePathDisplay.setText(filePath);
 
-        textViewPath.setText(filePath);
+    observableAudioRecorder = new ObservableAudioRecorder.Builder(filePath).audioSourceCamcorder().build();
 
-        mRecorderOnSubscribe = new RecorderOnSubscribe.Builder(filePath)
-                .audioSourceCamcorder()
-                .build();
+    play = (Button) findViewById(R.id.buttonPlay);
+    record = (Button) findViewById(R.id.buttonRecord);
+    record.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        MainActivityPermissionsDispatcher.startRecordingWithCheck(MainActivity.this);
+      }
+    });
 
-        final View playButton = findViewById(R.id.buttonPlay);
-        findViewById(R.id.buttonRecord).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                //start recording
-                if (mRecorderOnSubscribe.isRecording())
-                {
-                    ((TextView) view).setText("Record");
-                    try
-                    {
-                        mRecorderOnSubscribe.stop();
-                        //helper method for closing the dataStream, also writes the
-                        //wave header
-                        mRecorderOnSubscribe.completeRecording();
-                    } catch (IOException e)
-                    {
-                        Log.e("Recorder", e.getMessage());
-                    }
-                    playButton.setVisibility(View.VISIBLE);
-                    chronometerPersist.stopChronometer();
-                }
-                else
-                {
-                    ((TextView) view).setText("Stop");
-                    try
-                    {
-                        mRecorderOnSubscribe.start();
-                    } catch (FileNotFoundException e)
-                    {
-                        Log.e("Recorder Error", e.getMessage());
-                    }
-                    chronometerPersist.startChronometer();
-                }
-            }
-        });
-
-        mSubscription = Observable.create(mRecorderOnSubscribe).subscribe(new Action1<short[]>()
-        {
-            @Override
-            public void call(short[] shorts)
-            {
-                try
-                {
-                    mRecorderOnSubscribe.writeShortsToFile(shorts);
-                } catch (IOException e)
-                {
-                    Log.e("Recorder", e.getMessage());
-                }
-            }
-        }, new Action1<Throwable>()
-        {
-            @Override
-            public void call(Throwable throwable)
-            {
-                Log.e("Recorder Error", throwable.getMessage());
-            }
-        });
-
-        playButton.setVisibility(View.GONE);
-
-        playButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                playFile(filePath);
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        if (mSubscription != null)
-        {
-            try
-            {
-                mRecorderOnSubscribe.stop();
-            } catch (IOException e)
-            {
-                Log.e("onPause", e.getMessage());
-            }
-            mSubscription.unsubscribe();
+    subscription = Observable.create(observableAudioRecorder)
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Consumer<short[]>() {
+      @Override public void accept(@NonNull short[] shorts) throws Exception {
+        try {
+          observableAudioRecorder.writeShortsToFile(shorts);
+        } catch (IOException e) {
+          Log.e("Recorder", e.getMessage());
         }
-    }
+      }
+    }, new Consumer<Throwable>() {
+      @Override public void accept(Throwable throwable) {
+        Log.e("Recorder Error", throwable.getMessage());
+      }
+    });
 
-    private void playFile(String filePath)
-    {
-        //set up MediaPlayer
-        Intent intent = new Intent();
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        File file = new File(filePath);
-        intent.setDataAndType(Uri.fromFile(file), "audio/*");
-        startActivity(intent);
+    play.setVisibility(View.GONE);
+    play.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        playFile(filePath);
+      }
+    });
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode,
+      @android.support.annotation.NonNull String[] permissions,
+      @android.support.annotation.NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    if (subscription != null) {
+      try {
+        observableAudioRecorder.stop();
+      } catch (IOException e) {
+        Log.e("onPause", e.getMessage());
+      }
+      subscription.dispose();
     }
+  }
+
+  @NeedsPermission({ Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE })
+  void startRecording() {
+    //start recording
+    if (observableAudioRecorder.isRecording()) {
+      record.setText("Record");
+      try {
+        observableAudioRecorder.stop();
+        //helper method for closing the dataStream, also writes the
+        //wave header
+        observableAudioRecorder.completeRecording();
+      } catch (IOException e) {
+        Log.e("Recorder", e.getMessage());
+      }
+      play.setVisibility(View.VISIBLE);
+      chronometerPersist.stopChronometer();
+    } else {
+      record.setText("Stop");
+      try {
+        observableAudioRecorder.start();
+      } catch (FileNotFoundException e) {
+        Log.e("Recorder Error", e.getMessage());
+      }
+      chronometerPersist.startChronometer();
+    }
+  }
+
+  private void playFile(String filePath) {
+    //set up MediaPlayer
+    Intent intent = new Intent();
+    intent.setAction(android.content.Intent.ACTION_VIEW);
+    File file = new File(Environment.getExternalStorageDirectory(), "sample.wav");
+    Uri fileUri = FileProvider.getUriForFile(this, "com.minimize.android.recorder.audioprovider", file);
+    intent.setDataAndType(fileUri, "audio/*");
+    startActivity(intent);
+  }
 }
