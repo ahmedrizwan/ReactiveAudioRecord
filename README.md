@@ -6,8 +6,9 @@
 
 A reactive (Rx) implementation of the AudioRecord API for recording raw (pcm) audio-data. Also includes helper methods for the creation of Wave audio files. 
 
-###How to use it?
-#####Create an instance of RecorderOnSubscribe giving it the path to the file
+### How to use it?
+
+##### Create an instance of RecorderOnSubscribe giving it the path to the file
 ```java
 final String filePath = Environment.getExternalStorageDirectory() + "/sample.wav"; //dummy file 
 RecorderOnSubscribe recorder = new RecorderOnSubscribe.Builder(filePath)
@@ -16,7 +17,7 @@ RecorderOnSubscribe recorder = new RecorderOnSubscribe.Builder(filePath)
                                                       .audioSourceCamcorder()  //by default MIC
                                                       .build();
 ```
-#####Use the recorder OnSubscribe to create an observable
+##### Use the recorder OnSubscribe to create an observable
 ```java
 Observable.create(recorder)
           .subscribe( shorts -> {
@@ -25,7 +26,8 @@ Observable.create(recorder)
           });
 ```
 
-####After setting up the Observer, manipulate the recording-process by using these methods
+#### After setting up the Observer, manipulate the recording-process by using these methods
+
 | Name | Description |
 |:----:|:-----------:|
 | start() | Starts the recorder and moves it to *Recording* state |
@@ -35,7 +37,8 @@ Observable.create(recorder)
 | isRecording() | Returns true if the recorder is in *Recording* state |
 | isRecordingStopped() | Checks whether the recorder is in *Stopped* state or not |
 
-####Helper methods for wave file write operations
+#### Helper methods for wave file write operations
+
 | Name | Description |
 |:----:|:-----------:|
 | writeShortsToFile(shorts) | Writes the short buffers to wave file |
@@ -43,14 +46,14 @@ Observable.create(recorder)
 
 And that's it! Check out the sample code for a working example!
 
-##Download 
+## Download 
 Repository available on jCenter
 
 ```Gradle
 compile 'com.minimize.library:reactiveaudiorecord:1.0.2'
 ```
 
-##License 
+## License 
 ```
 Copyright 2015 Ahmed Rizwan
 
